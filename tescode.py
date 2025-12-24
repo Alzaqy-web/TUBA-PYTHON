@@ -1,11 +1,13 @@
-import pandas as pd 
+import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
 df = pd.read_csv('1. aapl.csv', parse_dates=['Date'])
 
 df['MA20'] = df['Adj Close'].rolling(20).mean()
 df['MA100'] = df['Adj Close'].rolling(100).mean()
-
 
 # Analisis Time Series
 def visualisasi_timeseries (df):
@@ -61,37 +63,63 @@ def nampilincolum(df):
         else:
             print("Salah input data")
 
-while True:
-    print("\n=== MENU ANALISIS SAHAM AAPL ===")
-    print("1. Time Series")
-    print("2. Indikator")
-    print("3. Volatilitas")
-    print("4. Tren")
-    print("5. memunculkan colum")
-    print("6. Keluar")
+# === Fungsi Machine Learning ===
+def machine_learning_prediksi(df):
+    # Fitur dan target
+    X = df[['Open', 'High', 'Low', 'Volume']]
+    y = df['Close']
 
-    pilihan = input ("Pilihan Menu (1/2/3/4/5/6): ")
+    # Split data train/test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+    # Model Linear Regression
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    # Prediksi
+    y_pred = model.predict(X_test)
+
+    # Evaluasi
+    mse = mean_squared_error(y_test, y_pred)
+    print(f"Mean Squared Error: {mse:.2f}")
+
+    # Visualisasi hasil prediksi vs aktual
+    plt.figure(figsize=(10,5))
+    plt.plot(df['Date'].iloc[-len(y_test):], y_test, label='Actual Close', color='blue')
+    plt.plot(df['Date'].iloc[-len(y_test):], y_pred, label='Predicted Close', color='red', linestyle='--')
+    plt.title('Prediksi Harga Saham AAPL (Linear Regression)')
+    plt.xlabel('Tanggal')
+    plt.ylabel('Harga (USD)')
+    plt.legend()
+    plt.show()
     
-    if pilihan == "1":
-        visualisasi_timeseries(df)
-    elif pilihan == "2":
-        visulisasi_Teknilal_Indikator(df)
-    elif pilihan == "3":
-        visualisasi_volatilitas(df)
-    elif pilihan == "4":
-        analisis_tren(df)
-    elif pilihan == "5":
-        nampilincolum(df)
-    elif pilihan == "6":
-        print("Anda suda keluar dari program")
-        break
-    else:
-        print ("Menu belum di tentukan")
-        
-        
-        
-# analisis 
-# 1. time series
-# 2. indikator teknikal
-# 3. volatilitas
-# 4. tren
+    while True:
+     print("\n=== MENU ANALISIS SAHAM AAPL ===")
+     print("1. Time Series")
+     print("2. Indikator")
+     print("3. Volatilitas")
+     print("4. Tren")
+     print("5. memunculkan colum")
+     print("6. Keluar")
+     print("7. Machine Learning Prediksi")
+ 
+     pilihan = input("Pilihan Menu (1/2/3/4/5/6/7): ")
+ 
+     if pilihan == "1":
+         visualisasi_timeseries(df)
+     elif pilihan == "2":
+         visulisasi_Teknilal_Indikator(df)
+     elif pilihan == "3":
+         visualisasi_volatilitas(df)
+     elif pilihan == "4":
+         analisis_tren(df)
+     elif pilihan == "5":
+         nampilincolum(df)
+     elif pilihan == "6":
+         machine_learning_prediksi(df)
+     elif pilihan == "7":
+         print("Anda sudah keluar dari program")
+         break
+     else:
+         print("Menu belum ditentukan")
+         
