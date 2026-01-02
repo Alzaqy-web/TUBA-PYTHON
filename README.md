@@ -34,3 +34,9 @@ pip install pandas matplotlib mplfinance scikit-learn
 4. Pilih menu analisis yang tersedia melalui terminal.
 
 ---
+
+## 🔗 Link Youtube
+
+[S1 TT KJ 24 02_ Kelompok 1_ Tugas Besar Python - Menganalisis Data Saham APPL](https://youtu.be/41SKz1xL0I4?si=F4EvxRnWD7g4bzdZ)
+
+---
